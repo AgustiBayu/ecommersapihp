@@ -1,0 +1,30 @@
+POST http://localhost:3000/api/produks HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Infinix Hot 40 PRO",
+  "deskripsi": "Hp terbaru dari bran infinix dengan spesifikasi yang bagus",
+  "harga": 1500000,
+  "jumlah_stok": 20,
+  "tanggal_masuk": "02-09-2006"
+}
+
+GET  http://localhost:3000/api/produks HTTP/1.1
+Content-Type: application/json
+
+GET  http://localhost:3000/api/produks/2 HTTP/1.1
+Content-Type: application/json
+
+PUT  http://localhost:3000/api/produks/3 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Infinix Hot 40 PRO",
+  "deskripsi": "Hp terbaru dari bran infinix dengan spesifikasi yang bagus",
+  "harga": 2000000,
+  "jumlah_stok": 20,
+  "tanggal_masuk": "02-09-2006"
+}
+
+DELETE http://localhost:3000/api/produks/4 HTTP/1.1
+Content-Type: application/json
