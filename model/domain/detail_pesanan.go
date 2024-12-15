@@ -2,8 +2,8 @@ package domain
 
 type DetailPesanan struct {
 	Id                   int
-	PesananId            Pesanan
-	ProdukId             Produk
+	PesananId            int
+	ProdukId             int
 	JumlahProduk         int
 	HargaProdukPembelian int
 }
