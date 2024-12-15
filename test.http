@@ -15,7 +15,7 @@ Content-Type: application/json
 GET  http://localhost:3000/api/produks/2 HTTP/1.1
 Content-Type: application/json
 
-PUT  http://localhost:3000/api/produks/3 HTTP/1.1
+PUT  http://localhost:3000/api/produks/1 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -23,7 +23,7 @@ Content-Type: application/json
   "deskripsi": "Hp terbaru dari bran infinix dengan spesifikasi yang bagus",
   "harga": 2000000,
   "jumlah_stok": 20,
-  "tanggal_masuk": "02-09-2006"
+  "tanggal_masuk": "02-03-2006"
 }
 
 DELETE http://localhost:3000/api/produks/4 HTTP/1.1

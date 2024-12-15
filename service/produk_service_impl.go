@@ -70,6 +70,8 @@ func (service *ProdukServiceImpl) Update(ctx context.Context, request web.Produk
 	helper.PanicIfError(err)
 	produk, err := service.ProdukRepository.FindById(ctx, tx, request.Id)
 	helper.PanicIfError(err)
+	err = helper.ValidateTanggalBaru(produk.TanggalMasuk, tanggalMasuk)
+	helper.PanicIfError(err)
 
 	produk.Name = request.Name
 	produk.Deskripsi = request.Deskripsi
