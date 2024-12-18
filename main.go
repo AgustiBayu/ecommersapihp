@@ -32,6 +32,10 @@ func main() {
 	keranjangService := service.NewKeranjangService(keranjangRepository, userRepository, produkRepository, db, validate)
 	keranjangController := controller.NewKeranjangController(keranjangService)
 
+	detailPesananRepository := repository.NewDetailPesananRepository()
+	detailPesananService := service.NewDetailPesananService(detailPesananRepository, pesananRepository, userRepository, produkRepository, db, validate)
+	detailPesananController := controller.NewDetailPesananController(detailPesananService)
+
 	router := httprouter.New()
 	router.POST("/api/produks", produkController.Create)
 	router.GET("/api/produks", produkController.FindAll)
@@ -50,6 +54,11 @@ func main() {
 	router.GET("/api/keranjangs/:keranjangId", keranjangController.FindById)
 	router.PUT("/api/keranjangs/:keranjangId", keranjangController.Update)
 	router.DELETE("/api/keranjangs/:keranjangId", keranjangController.Delete)
+	router.POST("/api/detailPesanans", detailPesananController.Create)
+	router.GET("/api/detailPesanans", detailPesananController.FindAll)
+	router.GET("/api/detailPesanans/:detailPesananId", detailPesananController.FindById)
+	router.PUT("/api/detailPesanans/:detailPesananId", detailPesananController.Update)
+	router.DELETE("/api/detailPesanans/:detailPesananId", detailPesananController.Delete)
 
 	server := http.Server{
 		Addr:    "localhost:3000",

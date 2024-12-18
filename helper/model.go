@@ -5,6 +5,54 @@ import (
 	"EcommersAPIHP/model/web"
 )
 
+func ToDetailPesananResponses(details []domain.DetailPesanan, pesanans map[int]domain.Pesanan, users map[int]domain.User, produks map[int]domain.Produk) []web.DetailPesananResponse {
+	var detailResponse []web.DetailPesananResponse
+	for _, detail := range details {
+		pesanan, exists := pesanans[detail.PesananId]
+		if !exists {
+			pesanan = domain.Pesanan{}
+		}
+		user, exists := users[pesanan.UserId]
+		if !exists {
+			user = domain.User{}
+		}
+		produk, exists := produks[detail.ProdukId]
+		if !exists {
+			produk = domain.Produk{}
+		}
+		detailResponse = append(detailResponse, ToDetailPesananResponse(detail, pesanan, user, produk))
+	}
+	return detailResponse
+}
+func ToDetailPesananResponse(detail domain.DetailPesanan, pesanan domain.Pesanan, user domain.User, produk domain.Produk) web.DetailPesananResponse {
+	return web.DetailPesananResponse{
+		Id: detail.Id,
+		Pesanan: web.PesananResponse{
+			Id: pesanan.Id,
+			User: web.UserResponse{
+				Id:              user.Id,
+				Name:            user.Name,
+				Email:           user.Email,
+				Pengguna:        string(user.Pengguna),
+				TanggalBuatAkun: FormatTanggal(user.TanggalBuatAkun),
+			},
+			TotalHarga:     pesanan.TotalHarga,
+			Status:         string(pesanan.Status),
+			TanggalPesanan: FormatTanggal(pesanan.TanggalPesanan),
+		},
+		Produk: web.ProdukResponse{
+			Id:           produk.Id,
+			Name:         produk.Name,
+			Deskripsi:    produk.Deskripsi,
+			Harga:        produk.Harga,
+			JumlahStok:   produk.JumlahStok,
+			TanggalMasuk: FormatTanggal(produk.TanggalMasuk),
+		},
+		JumlahProduk:         detail.JumlahProduk,
+		HargaProdukPembelian: detail.HargaProdukPembelian,
+	}
+}
+
 func ToKeranjangResponses(keranjangs []domain.Keranjang, users map[int]domain.User, produks map[int]domain.Produk) []web.KeranjangResponse {
 	var keranjangResponse []web.KeranjangResponse
 	for _, keranjang := range keranjangs {

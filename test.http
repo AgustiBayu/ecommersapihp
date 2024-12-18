@@ -1,3 +1,29 @@
+GET  http://localhost:3000/api/detailPesanans/4 HTTP/1.1
+Content-Type: application/
+
+GET  http://localhost:3000/api/detailPesanans HTTP/1.1
+Content-Type: application/json
+
+POST http://localhost:3000/api/detailPesanans HTTP/1.1
+Content-Type: application/json
+
+{  
+  "pesanan_id": 11,
+  "produk_id": 1,
+  "jumlah_produk": 3,
+  "harga_produk_pembelian": 500000
+}
+
+PUT  http://localhost:3000/api/detailPesanans/4 HTTP/1.1
+Content-Type: application/json
+
+{  
+  "pesanan_id": 11,
+  "produk_id": 1,
+  "jumlah_produk": 3,
+  "harga_produk_pembelian": 400000
+}
+
 GET  http://localhost:3000/api/keranjangs HTTP/1.1
 Content-Type: application/json
 
