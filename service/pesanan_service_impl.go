@@ -1,6 +1,7 @@
 package service
 
 import (
+	"EcommersAPIHP/exception"
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/model/domain"
 	"EcommersAPIHP/model/web"
@@ -65,7 +66,9 @@ func (service *PesananServiceImpl) FindById(ctx context.Context, pesananId int) 
 	defer helper.RollbackOrCommit(tx)
 
 	pesanan, user, err := service.PesananRepository.FindById(ctx, tx, pesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	return helper.ToPesananResponse(pesanan, user)
 }
 func (service *PesananServiceImpl) Update(ctx context.Context, request web.PesananUpdateRequest) web.PesananResponse {
@@ -78,9 +81,13 @@ func (service *PesananServiceImpl) Update(ctx context.Context, request web.Pesan
 	TanggalPesanan, err := time.Parse("02-01-2006", request.TanggalPesanan)
 	helper.PanicIfError(err)
 	pesanan, _, err := service.PesananRepository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	user, err := service.UserRepository.FindById(ctx, tx, pesanan.UserId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	err = helper.ValidateTanggalBaru(pesanan.TanggalPesanan, TanggalPesanan)
 	helper.PanicIfError(err)
 
@@ -98,6 +105,8 @@ func (service *PesananServiceImpl) Delete(ctx context.Context, pesananId int) {
 	defer helper.RollbackOrCommit(tx)
 
 	pesanan, _, err := service.PesananRepository.FindById(ctx, tx, pesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	service.PesananRepository.Delete(ctx, tx, pesanan)
 }

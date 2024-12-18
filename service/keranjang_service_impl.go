@@ -1,6 +1,7 @@
 package service
 
 import (
+	"EcommersAPIHP/exception"
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/model/domain"
 	"EcommersAPIHP/model/web"
@@ -68,7 +69,9 @@ func (service *KeranjangServiceImpl) FindById(ctx context.Context, keranjangId i
 	helper.PanicIfError(err)
 	defer helper.RollbackOrCommit(tx)
 	keranjang, user, produk, err := service.KeranjangRepository.FindById(ctx, tx, keranjangId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	return helper.ToKeranjangResponse(keranjang, user, produk)
 }
 func (service *KeranjangServiceImpl) Update(ctx context.Context, request web.KeranjangUpdateRequest) web.KeranjangResponse {
@@ -81,11 +84,17 @@ func (service *KeranjangServiceImpl) Update(ctx context.Context, request web.Ker
 	TanggalPenambahan, err := time.Parse("02-01-2006", request.TanggalPenambahan)
 	helper.PanicIfError(err)
 	keranjang, _, _, err := service.KeranjangRepository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	user, err := service.UserRepository.FindById(ctx, tx, keranjang.UserId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	produk, err := service.ProdukRepository.FindById(ctx, tx, keranjang.ProdukId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	err = helper.ValidateTanggalBaru(keranjang.TanggalPenambahan, TanggalPenambahan)
 	helper.PanicIfError(err)
 
@@ -104,6 +113,8 @@ func (service *KeranjangServiceImpl) Delete(ctx context.Context, keranjangId int
 	defer helper.RollbackOrCommit(tx)
 
 	keranjang, _, _, err := service.KeranjangRepository.FindById(ctx, tx, keranjangId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	service.KeranjangRepository.Delete(ctx, tx, keranjang)
 }

@@ -1,6 +1,7 @@
 package service
 
 import (
+	"EcommersAPIHP/exception"
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/model/domain"
 	"EcommersAPIHP/model/web"
@@ -58,7 +59,9 @@ func (service *ProdukServiceImpl) FindById(ctx context.Context, produkId int) we
 	defer helper.RollbackOrCommit(tx)
 
 	produk, err := service.ProdukRepository.FindById(ctx, tx, produkId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	return helper.ToProdukResponse(produk)
 }
 func (service *ProdukServiceImpl) Update(ctx context.Context, request web.ProdukUpdateRequest) web.ProdukResponse {
@@ -69,7 +72,9 @@ func (service *ProdukServiceImpl) Update(ctx context.Context, request web.Produk
 	tanggalMasuk, err := time.Parse("02-01-2006", request.TanggalMasuk)
 	helper.PanicIfError(err)
 	produk, err := service.ProdukRepository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	err = helper.ValidateTanggalBaru(produk.TanggalMasuk, tanggalMasuk)
 	helper.PanicIfError(err)
 
@@ -88,6 +93,8 @@ func (service *ProdukServiceImpl) Delete(ctx context.Context, produkId int) {
 	defer helper.RollbackOrCommit(tx)
 
 	produk, err := service.ProdukRepository.FindById(ctx, tx, produkId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	service.ProdukRepository.Delete(ctx, tx, produk)
 }

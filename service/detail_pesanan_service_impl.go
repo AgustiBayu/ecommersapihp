@@ -1,6 +1,7 @@
 package service
 
 import (
+	"EcommersAPIHP/exception"
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/model/domain"
 	"EcommersAPIHP/model/web"
@@ -47,11 +48,17 @@ func (service *DetailPesananServiceImpl) Create(ctx context.Context, request web
 	}
 	detail = service.DetailPesananRespository.Save(ctx, tx, detail)
 	pesanan, _, err := service.PesananRespository.FindById(ctx, tx, detail.PesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	user, err := service.UserRepository.FindById(ctx, tx, pesanan.UserId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	produk, err := service.ProdukRepository.FindById(ctx, tx, detail.ProdukId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	return helper.ToDetailPesananResponse(detail, pesanan, user, produk)
 }
 func (service *DetailPesananServiceImpl) FindAll(ctx context.Context) []web.DetailPesananResponse {
@@ -68,7 +75,9 @@ func (service *DetailPesananServiceImpl) FindById(ctx context.Context, detailPes
 	defer helper.RollbackOrCommit(tx)
 
 	detail, pesanan, user, produk, err := service.DetailPesananRespository.FindById(ctx, tx, detailPesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	return helper.ToDetailPesananResponse(detail, pesanan, user, produk)
 }
 func (service *DetailPesananServiceImpl) Update(ctx context.Context, request web.DetailPesananUpdateRequest) web.DetailPesananResponse {
@@ -78,13 +87,21 @@ func (service *DetailPesananServiceImpl) Update(ctx context.Context, request web
 	helper.PanicIfError(err)
 	defer helper.RollbackOrCommit(tx)
 	detail, _, _, _, err := service.DetailPesananRespository.FindById(ctx, tx, request.Id)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	pesanan, _, err := service.PesananRespository.FindById(ctx, tx, detail.PesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	user, err := service.UserRepository.FindById(ctx, tx, pesanan.UserId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	produk, err := service.ProdukRepository.FindById(ctx, tx, detail.ProdukId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 
 	detail.Id = request.Id
 	detail.PesananId = request.PesananId
@@ -101,6 +118,8 @@ func (service *DetailPesananServiceImpl) Delete(ctx context.Context, detailPesan
 	defer helper.RollbackOrCommit(tx)
 
 	detail, _, _, _, err := service.DetailPesananRespository.FindById(ctx, tx, detailPesananId)
-	helper.PanicIfError(err)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
 	service.DetailPesananRespository.Delete(ctx, tx, detail)
 }

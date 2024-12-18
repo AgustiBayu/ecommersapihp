@@ -3,6 +3,7 @@ package main
 import (
 	"EcommersAPIHP/app"
 	"EcommersAPIHP/controller"
+	"EcommersAPIHP/exception"
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/repository"
 	"EcommersAPIHP/service"
@@ -60,6 +61,7 @@ func main() {
 	router.PUT("/api/detailPesanans/:detailPesananId", detailPesananController.Update)
 	router.DELETE("/api/detailPesanans/:detailPesananId", detailPesananController.Delete)
 
+	router.PanicHandler = exception.ErrorHandler
 	server := http.Server{
 		Addr:    "localhost:3000",
 		Handler: router,
