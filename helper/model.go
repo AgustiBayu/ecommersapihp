@@ -5,6 +5,44 @@ import (
 	"EcommersAPIHP/model/web"
 )
 
+func ToKeranjangResponses(keranjangs []domain.Keranjang, users map[int]domain.User, produks map[int]domain.Produk) []web.KeranjangResponse {
+	var keranjangResponse []web.KeranjangResponse
+	for _, keranjang := range keranjangs {
+		user, exists := users[keranjang.UserId]
+		if !exists {
+			user = domain.User{}
+		}
+		produk, exists := produks[keranjang.ProdukId]
+		if !exists {
+			produk = domain.Produk{}
+		}
+		keranjangResponse = append(keranjangResponse, ToKeranjangResponse(keranjang, user, produk))
+	}
+	return keranjangResponse
+}
+func ToKeranjangResponse(keranjang domain.Keranjang, user domain.User, produk domain.Produk) web.KeranjangResponse {
+	return web.KeranjangResponse{
+		Id: keranjang.Id,
+		User: web.UserResponse{
+			Id:              user.Id,
+			Name:            user.Name,
+			Email:           user.Email,
+			Pengguna:        string(user.Pengguna),
+			TanggalBuatAkun: FormatTanggal(user.TanggalBuatAkun),
+		},
+		Produk: web.ProdukResponse{
+			Id:           produk.Id,
+			Name:         produk.Name,
+			Deskripsi:    produk.Deskripsi,
+			Harga:        produk.Harga,
+			JumlahStok:   produk.JumlahStok,
+			TanggalMasuk: FormatTanggal(produk.TanggalMasuk),
+		},
+		JumlahProduk:      keranjang.JumlahProduk,
+		TanggalPenambahan: FormatTanggal(keranjang.TanggalPenambahan),
+	}
+}
+
 func ToPesananResponses(pesanans []domain.Pesanan, users map[int]domain.User) []web.PesananResponse {
 	var pesananResponses []web.PesananResponse
 	for _, pesanan := range pesanans {
