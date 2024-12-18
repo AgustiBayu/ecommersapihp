@@ -4,6 +4,7 @@ import (
 	"EcommersAPIHP/helper"
 	"EcommersAPIHP/model/web"
 	"EcommersAPIHP/service"
+	"encoding/base64"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -33,9 +34,11 @@ func (controller *UserControllerImpl) Register(writer http.ResponseWriter, reque
 func (controller *UserControllerImpl) Login(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	userLoginRequest := web.UserLoginRequest{}
 	helper.ReadRequestBody(request, &userLoginRequest)
-
 	userResponse, err := controller.UserService.Login(request.Context(), userLoginRequest)
 	helper.PanicIfError(err)
+
+	token := base64.StdEncoding.EncodeToString([]byte(userLoginRequest.Email + ":" + userLoginRequest.Password))
+	writer.Header().Set("Authorization", "Basic "+token)
 	webResponse := web.WebResponse{
 		Code: 200,
 		Data: userResponse,
