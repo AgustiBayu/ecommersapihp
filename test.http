@@ -56,6 +56,7 @@ Content-Type: application/json
 
 
 GET  http://localhost:3000/api/pesanans HTTP/1.1
+Authorization: Basic am9obi5kb2VAZ21haWwuY29tOnBhc3N3b3JkMTIz
 Content-Type: application/json
 
 GET  http://localhost:3000/api/pesanans/12 HTTP/1.1
